@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  .row.banner
+    .col-12
+      h1= pageHeader.title
+
+  .row
+    .col-12.col-md-8
+      form(action="", method="post", role="form")
+        - if (error == "val")
+          .alert.alert-danger(role="alert") All fields required, please try again
+        .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="name") Location Name
+          .col-12.col-sm-10
+            input#name.form-control(name="name")
+        .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="address") Location Details
+          .col-12.col-sm-10
+            textarea#review.form-control(name="address", rows="5")
+        .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="lng") Longitude
+          .col-12.col-sm-10
+            input#name.form-control(name="lng")
+        .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="lat") Latitude
+          .col-12.col-sm-10
+            input#name.form-control(name="lat")
+        .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="facebookUrl") Facebook URL
+          .col-12.col-sm-10
+            input#name.form-control(name="facebookUrl")
+        .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="twitterUrl") Twitter URL
+          .col-12.col-sm-10
+            input#name.form-control(name="twitterUrl")
+        .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="phoneNumber") Phone Number
+          .col-12.col-sm-10
+            input#name.form-control(name="phoneNumber")
+        button.btn.btn-primary.float-right(href='/') Add Location
+    .col-12.col-md-4
