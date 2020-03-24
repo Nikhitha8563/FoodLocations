@@ -19,6 +19,10 @@ block content
           .col-12.col-sm-10
             textarea#review.form-control(name="address", rows="5")
         .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="description") Description
+          .col-12.col-sm-10
+            textarea#review.form-control(name="description", rows="5")
+        .form-group.row
           label.col-10.col-sm-2.col-form-label(for="lng") Longitude
           .col-12.col-sm-10
             input#name.form-control(name="lng")
@@ -38,5 +42,5 @@ block content
           label.col-10.col-sm-2.col-form-label(for="phoneNumber") Phone Number
           .col-12.col-sm-10
             input#name.form-control(name="phoneNumber")
-        button.btn.btn-primary.float-right(href='/') Add Location
+        button.btn.btn-primary.float-right(href='/admin') Add Location
     .col-12.col-md-4

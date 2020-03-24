@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-const host = process.env.DB_HOST || '127.0.0.1'
-const dbURL = `mongodb://${host}/FoodLoc8r`;
-const dbURL = `mongodb+srv://Loc8rdbUser:KCChiefs19!@loc8r-qlrtf.mongodb.net/Loc8r?retryWrites=true&w=majority`;
+//const host = process.env.DB_HOST || '127.0.0.1'
+//const dbURL = `mongodb://${host}/FoodLoc8r`;
+//const dbURL = 'mongodb://heroku_lw1vmb3h:8tu07674nn2as556300iorchqn@ds147684.mlab.com:47684/heroku_lw1vmb3h';
+const dbURL = 'mongodb+srv://FoodLoc8rUser:KCChiefs19!@foodloc8r-hg4y1.mongodb.net/FoodLoc8r';
 const readLine = require('readline');
 
 const connect = () => {
@@ -9,7 +10,7 @@ const connect = () => {
 }
 
 mongoose.connection.on('connected', () => {
-  console.log('connected');
+    console.log('connected to ', dbURL);
 });
 
 mongoose.connection.on('error', err => {

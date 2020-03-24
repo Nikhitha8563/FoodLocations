@@ -35,6 +35,7 @@ const locationsListByDistance = async (req, res) => {
         _id: result._id,
         name: result.name,
           address: result.address,
+          description: result.description,
           lng: result.lng,
           lat: result.lat,
           twitterUrl: result.twitterUrl,
