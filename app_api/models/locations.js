@@ -43,11 +43,14 @@ const locationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    city: String,
+    state: String,
+    zip: String,
     description: String,
-  coords: {
-    type: {type: String},
-    coordinates: [Number]
-  },
+    coords: {
+        type: { type: String },
+        coordinates: [Number]
+    },
     facebookUrl: String,
     twitterUrl: String,
     phoneNumber: Number

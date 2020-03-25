@@ -191,9 +191,12 @@ const doAddLocation = (req, res) => {
     const postdata = {
         name: req.body.name,
         address: req.body.address,
+        city: req.body.city,
+        state: req.body.state,
+        zip: req.body.zip,
         description: req.body.description,
-        lng: req.body.lng,
-        lat: req.body.lat,
+        lng: -94.5786,
+        lat: 39.0997,
         facebookUrl: req.body.facebookUrl,
         twitterUrl: req.body.twitterUrl,
         phoneNumber: req.body.phoneNumber
@@ -203,8 +206,8 @@ const doAddLocation = (req, res) => {
         method: 'POST',
         json: postdata
     };
-   
-    if (!postdata.name || !postdata.address || !postdata.lat || !postdata.lng || !postdata.phoneNumber) {
+    console.log(postdata);   
+    if (!postdata.name || !postdata.address || !postdata.zip || !postdata.facebookUrl || !postdata.phoneNumber) {
         res.redirect('/admin');
       
     } else {
@@ -212,8 +215,10 @@ const doAddLocation = (req, res) => {
             requestOptions,
             (err, { statusCode }) => {
                 if (statusCode === 201) {
+                    console.log('201');
                     res.redirect('/admin');
-                } else if (statusCode === 400 && name && name === 'ValidationError') {
+                } else if (statusCode === 400) {
+                    console.log('400');
                     res.redirect('/admin');
                 } else {
                     showError(req, res, statusCode);

@@ -15,32 +15,36 @@ block content
           .col-12.col-sm-10
             input#name.form-control(name="name")
         .form-group.row
-          label.col-10.col-sm-2.col-form-label(for="address") Location Details
+          label.col-10.col-sm-2.col-form-label(for="address") Address
           .col-12.col-sm-10
-            textarea#review.form-control(name="address", rows="5")
+            textarea#address.form-control(name="address", rows="3")
+        .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="city") City
+          .col-12.col-sm-10
+            input#city.form-control(name="city")
+        .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="state") State
+          .col-12.col-sm-10
+            input#state.form-control(name="state")
+        .form-group.row
+          label.col-10.col-sm-2.col-form-label(for="zip") Zip
+          .col-12.col-sm-10
+            input#zip.form-control(name="zip")
         .form-group.row
           label.col-10.col-sm-2.col-form-label(for="description") Description
           .col-12.col-sm-10
-            textarea#review.form-control(name="description", rows="5")
-        .form-group.row
-          label.col-10.col-sm-2.col-form-label(for="lng") Longitude
-          .col-12.col-sm-10
-            input#name.form-control(name="lng")
-        .form-group.row
-          label.col-10.col-sm-2.col-form-label(for="lat") Latitude
-          .col-12.col-sm-10
-            input#name.form-control(name="lat")
+            textarea#description.form-control(name="description", rows="5")
         .form-group.row
           label.col-10.col-sm-2.col-form-label(for="facebookUrl") Facebook URL
           .col-12.col-sm-10
-            input#name.form-control(name="facebookUrl")
+            input#facebookUrl.form-control(name="facebookUrl")
         .form-group.row
           label.col-10.col-sm-2.col-form-label(for="twitterUrl") Twitter URL
           .col-12.col-sm-10
-            input#name.form-control(name="twitterUrl")
+            input#twitterUrl.form-control(name="twitterUrl")
         .form-group.row
           label.col-10.col-sm-2.col-form-label(for="phoneNumber") Phone Number
           .col-12.col-sm-10
-            input#name.form-control(name="phoneNumber")
+            input#phoneNumber.form-control(name="phoneNumber")
         button.btn.btn-primary.float-right(href='/admin') Add Location
     .col-12.col-md-4

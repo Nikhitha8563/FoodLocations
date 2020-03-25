@@ -35,6 +35,9 @@ const locationsListByDistance = async (req, res) => {
         _id: result._id,
         name: result.name,
           address: result.address,
+          city: result.city,
+          state: result.state,
+          zip: result.zip,
           description: result.description,
           lng: result.lng,
           lat: result.lat,
@@ -55,9 +58,15 @@ const locationsListByDistance = async (req, res) => {
 };
 
 const locationsCreate = (req, res) => {
+    console.log('locationsCreate');
+    console.log(req);
   Loc.create({
-    name: req.body.name,
-    address: req.body.address,
+      name: req.body.name,
+      address: req.body.address,
+      city: req.body.city,
+      state: req.body.state,
+      zip: req.body.zip,
+      description: req.body.description,
       coords: {
           type: "Point",
           coordinates: [
@@ -75,6 +84,7 @@ const locationsCreate = (req, res) => {
         .status(400)
         .json(err);
     } else {
+        console.log('success');
       res
         .status(201)
         .json(location);
