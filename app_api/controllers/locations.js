@@ -1,9 +1,46 @@
 const mongoose = require('mongoose');
 const Loc = mongoose.model('Location');
+let nodeGeocoder = require('node-geocoder');
+
+
+const locationsByZipCode = function (req, res) {
+    zipcode = req.query.zipcode;
+
+    getCoordinatesFromZipcode(zipcode, function (coordinates) {
+        req.query.lat = coordinates.latitude;
+        req.query.lng = coordinates.longitude;
+        locationsListByDistance(req, res);
+    });
+
+};
+
+function getCoordinatesFromZipcode(zipcode, callback) {
+    let options = {
+        provider: 'openstreetmap'
+    };
+
+
+    let geoCoder = nodeGeocoder(options);
+    geoCoder.geocode(zipcode)
+        .then((res) => {
+            console.log('geocoder res: ', res);
+            res.forEach(location => {
+                if (location.countryCode === 'US') {
+                    callback(location);
+                    //throw Exception();
+                }
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
 
 const locationsListByDistance = async (req, res) => {
   const lng = parseFloat(req.query.lng);
-  const lat = parseFloat(req.query.lat);
+    const lat = parseFloat(req.query.lat);
+    //console.log('lat',lat);
   const near = {
     type: "Point",
     coordinates: [lng, lat]
@@ -47,9 +84,15 @@ const locationsListByDistance = async (req, res) => {
 
       }
     });
+      res.setHeader("Content-Type", "text/html");
+     
+      locations.forEach(location => {
+          console.log('loc1:', location.name);
+      });
+
     res
       .status(200)
-      .json(locations);
+        .json(locations);
   } catch (err) {
     res
       .status(404)
@@ -59,7 +102,7 @@ const locationsListByDistance = async (req, res) => {
 
 const locationsCreate = (req, res) => {
     console.log('locationsCreate');
-    console.log(req);
+    //console.log(req);
   Loc.create({
       name: req.body.name,
       address: req.body.address,
@@ -199,6 +242,7 @@ const locationsDeleteOne = (req, res) => {
 
 module.exports = {
   locationsListByDistance,
+  locationsByZipCode,
   locationsCreate,
   locationsReadOne,
   locationsDeleteOne

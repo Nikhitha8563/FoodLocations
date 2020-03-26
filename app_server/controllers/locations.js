@@ -1,4 +1,5 @@
 const request = require('request');
+let nodeGeocoder = require('node-geocoder');
 const apiOptions = {
   server: 'http://localhost:3000'
 };
@@ -38,8 +39,10 @@ const showError = (req, res, status) => {
 
 
 const renderHomepage = (req, res, responseBody) => {
+    console.log('entered');
+    console.log('responseBody', responseBody);
     let message = null;
-    if (!(responseBody instanceof Array)) {
+    if ((responseBody instanceof Array)) {
         message = 'API lookup error';
         responseBody = [];
     } else {
@@ -47,6 +50,7 @@ const renderHomepage = (req, res, responseBody) => {
             message = 'No places found nearby';
         }
     }
+    var loc = JSON.parse(responseBody);
     res.render('locations-list',
         {
             title: 'Meal Loc8r - Free meal finder',
@@ -55,73 +59,43 @@ const renderHomepage = (req, res, responseBody) => {
                 strapLine: 'Find places giving out free meals near you!'
             },
             sidebar: "Meal Loc8r helps you find free meals during the coronavirus pandemic. Many thanks to these great organizations doing their part during these tough times.",
-            locations: responseBody,
+            locations: loc,
             message
         }
     );
+
+  
 };
 
 const homelist = (req, res) => {
     const path = '/api/locations';
-
-    var IPinfo = require("node-ipinfo");
-    //var token = "7f5bc19fbab4c6";
-    var token = "";
-    var iplng = '';
-    var iplat = '';
-
-    var ipAddr = req.headers["x-forwarded-for"];
-    if (ipAddr) {
-        var list = ipAddr.split(",");
-        ipAddr = list[list.length - 1];
-    } else {
-        ipAddr = req.connection.remoteAddress;
-    }
-
-    var ipinfo = new IPinfo(token);
-
-    console.log("ipaddress:" + ipAddr);
-
-    ipinfo.lookupIp(ipAddr).then((response) => {
-        console.log(response);
-        var loc = response.loc.split(',');
-        var coords = {
-            latitude: loc[0],
-            longitude: loc[1]
-        };
-
-        iplng = coords.longitude;
-        iplat = coords.latitude;
-
-        console.log(iplng);
-        console.log(iplat);
-
-        var requestOptions = {
-            url: `${apiOptions.server}${path}`,
-            method: 'GET',
-            json: {},
-            qs: {
-                lng: iplng,
-                lat: iplat,
-                maxDistance: 20
+    const requestOptions = {
+        url: `${apiOptions.server}${path}`,
+        method: 'GET',
+        json: {},
+        qs: {
+            lng: -0.7992599,
+            lat: 51.378091,
+            maxDistance: 20
+        }
+    };
+    request(
+        requestOptions,
+        (err, { statusCode }, body) => {
+            let data = [];
+            
+            body.forEach(bo => {
+                console.log('body:', bo.name);
+            });
+            if (statusCode === 200 && body.length) {
+                data = body.map((item) => {
+                    item.distance = formatDistance(item.distance);
+                    return item;
+                });
             }
-        };
-
-        request(
-            requestOptions,
-            (err, { statusCode }, body) => {
-                let data = [];
-                if (statusCode === 200 && body.length) {
-                    data = body.map((item) => {
-                        item.distance = formatDistance(item.distance);
-                        return item;
-                    });
-                }
-                renderHomepage(req, res, data);
-            }
-        );
-
-    });
+            renderHomepage(req, res, data);
+        }
+    );
 };
 
 const renderDetailPage = (req, res, location) => {
@@ -136,6 +110,16 @@ const renderDetailPage = (req, res, location) => {
                 callToAction: 'If you would like to pitch in and get your organization listed - please reach out to Shawn@yoodle.com.'
             },
             location
+        }
+    );
+};
+
+const renderLocations = (req, res) => {
+    res.render('location-search',
+        {
+            title: 'Search Locations',
+            pageHeader: { title: 'Search Locations' },
+            error: req.query.err
         }
     );
 };
@@ -164,6 +148,23 @@ const getLocationInfo = (req, res, callback) => {
   );
 };
 
+const getLocations = (req, res) => {
+
+    const path = `/api/locationsearch?zipcode=${req.query.zipcode}`;
+    let url = `${apiOptions.server}${path}`;
+
+    console.log(url);
+    request(url, function (err, resp, body) {
+        console.log(body);
+        if (resp.statusCode === 200) {
+            //res.redirect('/locationsRender');
+            renderHomepage(req, res, body);
+        } else {
+            showError(req, res, resp.statusCode);
+        }
+    });
+};
+
 const locationInfo = (req, res) => {
   getLocationInfo(req, res,
     (req, res, responseData) => renderDetailPage(req, res, responseData)
@@ -186,7 +187,43 @@ const addReview = (req, res) => {
   );
 };
 
+function getCoordinatesFromZipcode(zipcode, callback) {
+    let options = {
+        provider: 'openstreetmap'
+    };
+
+
+    let geoCoder = nodeGeocoder(options);
+    geoCoder.geocode(zipcode)
+        .then((res) => {
+            res.forEach(location => {
+                if (location.countryCode === 'US') {
+                    callback(location);
+                    throw Exception();
+                }
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
 const doAddLocation = (req, res) => {
+    zipcode = req.body.zip;
+    console.log('zip', zipcode);
+    getCoordinatesFromZipcode(zipcode, function (coordinates) {
+        req.body.lat = coordinates.latitude;
+        req.body.lng = coordinates.longitude;
+        console.log('doAddLocation');
+        console.log('lat:', req.body.lat);
+        doAddLoc(req, res);
+    });
+    
+    
+};
+
+const doAddLoc = (req, res) => {
+    console.log('lat', req.body.lat);
     const path = '/api/locations';
     const postdata = {
         name: req.body.name,
@@ -195,8 +232,8 @@ const doAddLocation = (req, res) => {
         state: req.body.state,
         zip: req.body.zip,
         description: req.body.description,
-        lng: -94.5786,
-        lat: 39.0997,
+        lng: req.body.lng,
+        lat: req.body.lat,
         facebookUrl: req.body.facebookUrl,
         twitterUrl: req.body.twitterUrl,
         phoneNumber: req.body.phoneNumber
@@ -259,10 +296,13 @@ const doAddReview = (req, res) => {
 };
 
 module.exports = {
-  homelist,
-  locationInfo,
-  addReview,
+    renderLocations,
+    homelist,
+    locationInfo,
+    addReview,
     doAddReview,
     doAddLocation,
-    renderReviewForm
+    renderReviewForm,
+    getLocations,
+    renderHomepage
 };

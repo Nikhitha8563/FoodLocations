@@ -13,7 +13,11 @@ router
   .route('/locations/:locationid')
   .get(ctrlLocations.locationsReadOne)
 /*.put(ctrlLocations.locationsUpdateOne)*/
-  .delete(ctrlLocations.locationsDeleteOne);
+    .delete(ctrlLocations.locationsDeleteOne);
+
+router
+    .route('/locationsearch')
+    .get(ctrlLocations.locationsByZipCode)
 
 // reviews
 router
