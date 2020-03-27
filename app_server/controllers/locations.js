@@ -12,7 +12,7 @@ const formatDistance = (distance) => {
   let unit = 'm';
   if (distance > 1000) {
     thisDistance = parseFloat(distance / 1000).toFixed(1);
-    unit = 'km';
+    unit = 'miles';
   } else {
     thisDistance = Math.floor(distance);
   }
@@ -51,6 +51,15 @@ const renderHomepage = (req, res, responseBody) => {
         }
     }
     var loc = JSON.parse(responseBody);
+    if (loc.length) {
+        let data = loc.map((item) => {
+            item.distance = formatDistance(item.distance);
+            return item;
+        });
+    }
+
+
+
     res.render('locations-list',
         {
             title: 'Meal Loc8r - Free meal finder',
@@ -109,6 +118,7 @@ const renderDetailPage = (req, res, location) => {
                 context: 'is on Meal Loc8r because they are one of the many organizations providing free meals during this coronovirus pandemic.',
                 callToAction: 'If you would like to pitch in and get your organization listed - please reach out to Shawn@yoodle.com.'
             },
+
             location
         }
     );
@@ -118,7 +128,11 @@ const renderLocations = (req, res) => {
     res.render('location-search',
         {
             title: 'Search Locations',
-            pageHeader: { title: 'Search Locations' },
+            pageHeader: {
+                title: 'Search Locations',
+                strapLine: 'Find places giving out free meals near you!'
+            },
+            sidebar: "Meal Loc8r helps you find free meals during the coronavirus pandemic. Many thanks to these great organizations doing their part during these tough times.",
             error: req.query.err
         }
     );

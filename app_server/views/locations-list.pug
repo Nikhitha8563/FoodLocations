@@ -17,6 +17,7 @@ block content
           .card-block
             h4
               a(href=`/location/${location._id}`)= location.name
+              span.badge.pull-right.badge-default= location.distance
             p.address= location.address
             
 
