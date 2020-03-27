@@ -53,7 +53,7 @@ const locationSchema = new mongoose.Schema({
     },
     facebookUrl: String,
     twitterUrl: String,
-    phoneNumber: Number
+    phoneNumber: String
   
 });
 locationSchema.index({coords: '2dsphere'});

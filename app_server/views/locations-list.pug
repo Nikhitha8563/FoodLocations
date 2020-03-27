@@ -17,7 +17,11 @@ block content
           .card-block
             h4
               a(href=`/location/${location._id}`)= location.name
-            p.address= location.address
+              span.badge.pull-right.badge-default.floatRight= location.distance
+            p.address= location.address 
+            p.address= location.city
+            p.state= location.state
+            p.state= location.zip
             
 
     .col-12.col-md-4

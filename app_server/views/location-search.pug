@@ -5,6 +5,7 @@ block content
     .row.banner
         .col-12
             h1= pageHeader.title
+                small &nbsp;#{pageHeader.strapLine}
 
     .row
         .col-12.col-md-8
@@ -16,4 +17,6 @@ block content
                     .col-12.col-sm-10
                         input#name.form-control(name="zipcode")
                 button.btn.btn-primary.float-right Search
+
         .col-12.col-md-4
+         p.lead= sidebar

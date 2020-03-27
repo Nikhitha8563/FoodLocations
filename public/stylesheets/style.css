@@ -8,6 +8,10 @@ legend {
   font-family: 'Lobster', cursive;
 }
 
+.floatRight{
+    float : right;
+}
+
 .navbar {
   background-color: #ad1d28;
   border-color: #911821;

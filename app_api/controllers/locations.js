@@ -37,6 +37,23 @@ function getCoordinatesFromZipcode(zipcode, callback) {
 };
 
 
+var theEarth = (function() {
+    var earthRadius = 3959; // km, miles is 3959
+
+    var getDistanceFromRads = function(rads) {
+        return parseFloat(rads * earthRadius);
+    };
+
+    var getRadsFromDistance = function(distance) {
+        return parseFloat(distance / earthRadius);
+    };
+
+    return {
+        getDistanceFromRads: getDistanceFromRads,
+        getRadsFromDistance: getRadsFromDistance
+    };
+})();
+
 const locationsListByDistance = async (req, res) => {
   const lng = parseFloat(req.query.lng);
     const lat = parseFloat(req.query.lat);
@@ -62,7 +79,7 @@ const locationsListByDistance = async (req, res) => {
     const results = await Loc.aggregate([
       {
         $geoNear: {
-          near,
+          near: near,
           ...geoOptions
         }
       }
@@ -70,6 +87,7 @@ const locationsListByDistance = async (req, res) => {
     const locations = results.map(result => {
       return {
         _id: result._id,
+          distance: `${result.distance.calculated.toFixed()}`,
         name: result.name,
           address: result.address,
           city: result.city,
@@ -85,10 +103,7 @@ const locationsListByDistance = async (req, res) => {
       }
     });
       res.setHeader("Content-Type", "text/html");
-     
-      locations.forEach(location => {
-          console.log('loc1:', location.name);
-      });
+
 
     res
       .status(200)
