@@ -15,7 +15,7 @@ block content
                 .form-group.row
                     label.col-10.col-sm-2.col-form-label(for="zipcode") Enter Zipcode
                     .col-12.col-sm-10
-                        input#name.form-control(name="zipcode")
+                        input#name.form-control(name="zipcode", type='number', pattern='[0-9]{5}')
                 button.btn.btn-primary.float-right Search
 
         .col-12.col-md-4

@@ -2,24 +2,36 @@ extends layout
 
 include _includes/sharedHTMLfunctions
 
+
+  //alignment of contact details and description
+    //display city and state
+    //add location map
 block content
   .row.banner
     .col-12
       h1= pageHeader.title
   .row
-    .col-12.col-lg-12.col-md-12
-      p= location.address
+    .col-6.col-lg-6.col-sm-6.col-md-6
+      p= location.address +  ', '+ location.city+ ', ' + location.state + ', ' + location.zip
       h2.panel-title Description
       .card
         .card-block
           p= location.description
-      .col-12.col-lg-12.col-md-12
-        h2.panel-title Contact Details
-        .card
-          .card-block
-              a(href=`${location.facebookUrl}`)= location.facebookUrl
-              br
-              a(href=`${location.twitterUrl}`)= location.twitterUrl
-              br
-              p= location.phoneNumber
+      h2.panel-title Contact Details
+      .card
+        .card-block
+            p= 'Phone Number: '+ location.phoneNumber
+            span Facebook URL :
+            | &nbsp;
+            a(href=`${location.facebookUrl}`)= location.facebookUrl
+            br
+            span Twitter URL :
+            | &nbsp;
+            a(href=`${location.twitterUrl}`)= location.twitterUrl
+    .col-6.col-lg-6.col-xs-12.col-sm-6.location-map
+      h2.panel-title Location Map
+      .panel.panel-primary
+        .panel-body
+          iframe( width='500' height='500' src='https://maps.google.com/?q='+`${location.coords.lat},`+ `${location.coords.lng}`+ '&output=svembed')
+
 
